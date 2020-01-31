@@ -1,0 +1,14 @@
+%main.container{:role => "main"}
+  .jumbotron
+    %h1 Resultado del Servidor
+    - if @lock.present?
+      %div{:class=>'respond_box_good'}
+        %p= "El código introducido de Google Authenticator <b> COINCIDE</b> con el código generado en el servidor.".html_safe
+    - else
+      %div{:class=>'respond_box_wrong'}
+        %p= "El código introducido de Google Authenticator  <b> NO coincide</b> con el código generado en el servidor.".html_safe 
+    
+    = link_to "back", root_path, class: "clear_text"     
+          
+
+   

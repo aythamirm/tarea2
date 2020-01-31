@@ -1,0 +1,29 @@
+%nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark
+  %a.navbar-brand{:href => "#"} OTP
+  %button.navbar-toggler{"aria-controls" => "navbarsExampleDefault", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarsExampleDefault", "data-toggle" => "collapse", :type => "button"}
+    %span.navbar-toggler-icon
+  #navbarsExampleDefault.collapse.navbar-collapse
+%main.container{:role => "main"}
+  .jumbotron
+    %h1 Activando doble factor de autentificación usando Google Authenticator
+    -@lock=false
+    - if @lock.present?
+      %respond_box
+        %p = "El código enviado introducido de Google Authenticator coincide con el código generado en el servidor."
+    = simple_form_for :multi_factor_authentication, url: pages_two_factor_enabled_path, html: { class: 'form-inline' }  do |f|
+      /- binding.pry
+      - qr = RQRCode::QRCode.new(User.last.provisioning_uri, size: 10, level: :h )
+      %table{:class=>"qr", :align=>"center"} 
+        - qr.modules.each_index do |x| 
+          %tr
+          -qr.modules.each_index do |y| 
+            - if qr.qrcode.checked?(x,y)
+              %td{:class=>"black"}
+            - else 
+              %td{ :class=>"white"}
+      %div{:class=>'form-group'}
+        %div{:class =>'text-center'}
+          = f.input_field "otp_code_token", placeholder: 'Verify Token', class: 'form-control input-lg' 
+          = f.submit "Update", class: 'btn btn-lg btn-block btn-primary' 
+        
+      
